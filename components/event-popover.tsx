@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useRef, useState, useTransition } from "react"
 import { Button } from "./ui/button"
 import { Input } from "./ui/input"
@@ -37,10 +39,7 @@ export default function EventPopover({ isOpen, onClose, date }: EventPopoverProp
     e.stopPropagation()
     onClose()
   }
-
-  const handlePopoverClick = (e: React.MouseEvent) => {
-    e.stopPropagation()
-  }
+  const handlePopoverClick = (e: React.MouseEvent) => e.stopPropagation()
 
   async function onSubmit(formData: FormData) {
     setError(null)
@@ -62,26 +61,51 @@ export default function EventPopover({ isOpen, onClose, date }: EventPopoverProp
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={handleClose}>
-      <div ref={popoverRef} className="w-full max-w-md rounded-lg bg-white shadow-lg" onClick={handlePopoverClick}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleClose}
+    >
+      <div
+        ref={popoverRef}
+        className="w-full max-w-md rounded-lg bg-white shadow-lg"
+        onClick={handlePopoverClick}
+      >
         <div className="mb-2 flex items-center justify-between rounded-md bg-slate-100 p-1">
           <HiOutlineMenuAlt4 />
           <Button variant="ghost" size="icon" type="button" onClick={handleClose}>
             <IoCloseSharp className="h-4 w-4" />
           </Button>
         </div>
-        <form className="space-y-4 p-6" action={onSubmit}>
-          <Input type="text" name="title" placeholder="Add title" className="my-4 rounded-none border-0 border-b text-2xl focus-visible:border-b-2 focus-visible:border-b-blue-600 focus-visible:ring-0 focus-visible:ring-offset-0" />
+
+        <form
+          className="space-y-4 p-6"
+          onSubmit={async (e) => {
+            e.preventDefault()
+            const data = new FormData(e.currentTarget)
+            await onSubmit(data)
+          }}
+        >
+          <Input
+            type="text"
+            name="title"
+            placeholder="Add title"
+            className="my-4 rounded-none border-0 border-b text-2xl focus-visible:border-b-2 focus-visible:border-b-blue-600 focus-visible:ring-0 focus-visible:ring-offset-0"
+          />
 
           <label className="flex items-center space-x-2">
             <span className="text-sm">Color</span>
-            <input type="color" name="color" defaultValue="#3b82f6" className="h-8 w-8 rounded" />
+            <input
+              type="color"
+              name="color"
+              defaultValue="#3b82f6"
+              className="h-8 w-8 rounded"
+            />
           </label>
 
           <div className="flex items-center justify-between">
-            <Button className="bg-blue-100 text-blue-700 hover:bg-blue-100 hover:text-blue-700">Event</Button>
+            <Button type="button" className="bg-blue-100 text-blue-700">Event</Button>
             <Button type="button" variant="ghost">Task</Button>
-            <Button type="button" variant="ghost">Appointmet Schedule <sup className="bg-blue-500">new</sup></Button>
+            <Button type="button" variant="ghost">Appointment Schedule<sup className="bg-blue-500">new</sup></Button>
           </div>
 
           <div className="flex items-center space-x-3">
@@ -89,8 +113,10 @@ export default function EventPopover({ isOpen, onClose, date }: EventPopoverProp
             <div className="flex items-center space-x-3 text-sm">
               <p>{dayjs(date).format("dddd, MMMM D")}</p>
               <AddTime onTimeSelect={setSelectedTime} />
-              <input type="hidden" name="date" value={date} />
-              <input type="hidden" name="time" value={selectedTime} />
+              <input
+                type="hidden"
+                name="timestamp"
+                value={dayjs(`${date} ${selectedTime}`, "YYYY-MM-DD HH:mm").toISOString()} />
             </div>
           </div>
 
@@ -107,8 +133,13 @@ export default function EventPopover({ isOpen, onClose, date }: EventPopoverProp
           <div className="flex items-center space-x-3">
             <IoMdCalendar className="size-5 text-slate-600" />
             <div>
-              <div className="flex items-center space-x-3 text-sm"><p>Sweytank Srivastava</p><div className="h-4 w-4 rounded-full bg-violet-500" /></div>
-              <div className="flex items-center space-x-1 text-xs"><span>Busy</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Default visibility</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Notify 30 minutes before</span></div>
+              <div className="flex items-center space-x-3 text-sm">
+                <p>Sweytank Srivastava</p>
+                <div className="h-4 w-4 rounded-full bg-violet-500" />
+              </div>
+              <div className="flex items-center space-x-1 text-xs">
+                <span>Busy</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Default visibility</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Notify 30 minutes before</span>
+              </div>
             </div>
           </div>
 

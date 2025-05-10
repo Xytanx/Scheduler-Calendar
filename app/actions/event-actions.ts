@@ -5,35 +5,38 @@ import { eventsTable } from "@/db/schema"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 
-export async function createEvent(formData: FormData): Promise<{ error: string } | { success: boolean }> {
-  const title = formData.get("title") as string
+export async function createEvent(
+  formData: FormData
+): Promise<{ error: string } | { success: boolean }> {
+  const title       = formData.get("title")       as string
   const description = formData.get("description") as string
-  const date = formData.get("date") as string
-  const time = formData.get("time") as string
-  const color = formData.get("color") as string
+  const timestamp   = formData.get("timestamp")   as string
+  const color       = formData.get("color")       as string
 
-  if (!title || !description || !date || !time || !color) {
+  if (!title || !description || !timestamp || !color) {
     return { error: "All fields are required" }
   }
 
-  const dateTime = new Date(`${date}T${time}:00`)
+  const dateTime = new Date(timestamp)
 
   try {
     await db.insert(eventsTable).values({
       title,
       description,
-      date: dateTime,
-      color
+      date:  dateTime,
+      color,
     })
     revalidatePath("/")
     return { success: true }
-  } catch (error) {
-    console.error("Error creating event:", error)
+  } catch (err) {
+    console.error("Error creating event:", err)
     return { error: "Failed to create event" }
   }
 }
 
-export async function deleteEvent(id: string): Promise<{ error: string } | { success: boolean }> {
+export async function deleteEvent(
+  id: string
+): Promise<{ error: string } | { success: boolean }> {
   const numericId = Number(id)
   if (Number.isNaN(numericId)) {
     return { error: "Invalid event ID" }
@@ -51,8 +54,8 @@ export async function deleteEvent(id: string): Promise<{ error: string } | { suc
 
     revalidatePath("/")
     return { success: true }
-  } catch (error) {
-    console.error("Error deleting event:", error)
+  } catch (err) {
+    console.error("Error deleting event:", err)
     return { error: "Failed to delete event" }
   }
 }

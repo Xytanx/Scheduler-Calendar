@@ -28,7 +28,7 @@ export default function AddTime({
   }, [])
 
   const generateTimeIntervals = () => {
-    const intervals = []
+    const intervals: string[] = []
     for (let hour = 0; hour < 24; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
         intervals.push(
@@ -41,13 +41,14 @@ export default function AddTime({
 
   const handleTimeSelect = (time: string) => {
     setSelectedTime(time)
-    onTimeSelect(time);
+    onTimeSelect(time)
     setIsOpen(false)
   }
 
   return (
     <div className="relative" ref={dropdownRef}>
       <Button
+        type="button"
         variant="outline"
         className="w-24 justify-between"
         onClick={() => setIsOpen(!isOpen)}
@@ -61,6 +62,7 @@ export default function AddTime({
             <div className="p-1">
               {generateTimeIntervals().map((time) => (
                 <Button
+                  type="button"
                   key={time}
                   variant="ghost"
                   className="w-full justify-start"
