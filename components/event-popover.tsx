@@ -107,7 +107,7 @@ export default function EventPopover({ isOpen, onClose, date }: EventPopoverProp
           <div className="flex items-center space-x-3">
             <IoMdCalendar className="size-5 text-slate-600" />
             <div>
-              <div className="flex items-center space-x-3 text-sm"><p>Sweytannk Srivastava</p><div className="h-4 w-4 rounded-full bg-violet-500" /></div>
+              <div className="flex items-center space-x-3 text-sm"><p>Sweytank Srivastava</p><div className="h-4 w-4 rounded-full bg-violet-500" /></div>
               <div className="flex items-center space-x-1 text-xs"><span>Busy</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Default visibility</span><div className="h-1 w-1 rounded-full bg-gray-500" /><span>Notify 30 minutes before</span></div>
             </div>
           </div>
